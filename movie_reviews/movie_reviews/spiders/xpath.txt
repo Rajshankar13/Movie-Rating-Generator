@@ -1,0 +1,3 @@
+Small reviews: //div[@class='review_body']/span/text()
+Expanded reviews: //div[@class='review_body']/span/span[@class='blurb blurb_expanded']/text()
+Rating: //div[@class='left fl']/div/text()
