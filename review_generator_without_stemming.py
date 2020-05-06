@@ -1,7 +1,6 @@
 import json
 import re
 from nltk.corpus import stopwords
-from nltk.stem.porter import PorterStemmer
 
 
 with open('movie_reviews/all_reviews.json', ) as f:
@@ -30,33 +29,17 @@ for review in all_reviews:
 	if(len(list1) != 0):
 		cleaned_reviews.append(list1)					#To remove empty lists
 
-#Perform Stemming
-def stemming(corpa):
-	text = list()
-	porter_stemmer = PorterStemmer()
-	for word in corpa:
-		text.append(porter_stemmer.stem(word))
-	return text
-
-stemmed_reviews = list()
-for review in cleaned_reviews:
-	stemmed_reviews.append(stemming(review))
-
 #Reading positive_words.txt and negative_words.txt
 positive_words, negative_words = list(), list()
 with open('positive-words.txt', ) as f:
-	positive_words = stemming(f.read().split())
-	positive_words = set(positive_words)				#Removing repeated words
-	positive_words = list(positive_words)				#Converting back to list
+	positive_words = f.read().split()
 
 with open('negative-words.txt', ) as f:
-	negative_words = stemming(f.read().split())
-	negative_words = set(negative_words)				#Removing repeated words
-	negative_words = list(negative_words)				#Converting back to list
+	negative_words = f.read().split()
 
 #Labelling the reviews
 positive_reviews, negative_reviews, neutral_reviews, flag = 0, 0, 0, 0
-for review in stemmed_reviews:
+for review in cleaned_reviews:
 	positive_word_count = 0
 	negative_word_count = 0
 
@@ -94,9 +77,9 @@ for review in stemmed_reviews:
 		neutral_reviews += 1
 
 # print(stemmed_reviews)
-# print("Total reviews: ", len(stemmed_reviews), "Positive Reviews: ", positive_reviews, 
-	# "Negative Reviews: ", negative_reviews, "Neutral Reviews: ", neutral_reviews)
+print("Total reviews: ", len(cleaned_reviews), "Positive Reviews: ", positive_reviews, 
+	"Negative Reviews: ", negative_reviews, "Neutral Reviews: ", neutral_reviews)
 
-for review in stemmed_reviews:
+for review in cleaned_reviews:
 	if(review[-1] == 2):
 		print(review)
