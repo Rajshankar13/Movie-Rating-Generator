@@ -6,7 +6,7 @@ class MetacriticReviewsSpider(scrapy.Spider):
 	name = "metacritic_reviews"
 
 	def start_requests(self):
-		url = 'http://www.metacritic.com/movie/avengers-infinity-war/user-reviews'
+		url = 'http://www.metacritic.com/movie/avengers-endgame/user-reviews'
 		yield scrapy.Request(url = url, callback = self.parse)
 
 	def parse(self, response):

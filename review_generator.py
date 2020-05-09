@@ -4,7 +4,7 @@ from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 
 
-with open('movie_reviews/all_reviews.json', ) as f:
+with open('movie_reviews/joker-reviews.json', ) as f:
 	reviews = json.load(f)
 
 all_reviews = list()
@@ -15,6 +15,22 @@ for review in reviews:									#reviews is a list of dictionaries
 		for val in value:
 			if(val != ' '):								#Checking if content is not null
 				all_reviews.append(val.split())
+
+#Calculating ratings based on the scores given by the user at the site
+with open('movie_reviews/joker-ratings.json', ) as f:
+	ratings = json.load(f)
+
+all_ratings = list()
+
+for rating in ratings:
+	for value in rating.values():
+		value = int(value)
+		all_ratings.append(value)
+
+total_sum = 0
+for rating in all_ratings:
+	total_sum += rating
+#----------------------------------------------------------------------
 
 english_stop_words = stopwords.words('english')
 english_stop_words.remove("not")
@@ -93,10 +109,14 @@ for review in stemmed_reviews:
 		review.append(2)								#Label review as neutral
 		neutral_reviews += 1
 
-# print(stemmed_reviews)
-# print("Total reviews: ", len(stemmed_reviews), "Positive Reviews: ", positive_reviews, 
-	# "Negative Reviews: ", negative_reviews, "Neutral Reviews: ", neutral_reviews)
+formula1 = (positive_reviews + 0.5 * neutral_reviews) / (positive_reviews + negative_reviews)
+formula2 = (positive_reviews + 0.5 * neutral_reviews) / (positive_reviews + negative_reviews + 0.5 * neutral_reviews)
 
-for review in stemmed_reviews:
-	if(review[-1] == 2):
-		print(review)
+# print(stemmed_reviews)
+print("Total reviews: ", len(stemmed_reviews), "Positive Reviews: ", positive_reviews, 
+	"Negative Reviews: ", negative_reviews, "Neutral Reviews: ", neutral_reviews)
+print("Formula 1: ", formula1, "Formula 2: ", formula2)
+print("Rating by user score: ", total_sum / len(ratings))
+# for review in stemmed_reviews:
+# 	if(review[-1] == 2):
+# 		print(review)
