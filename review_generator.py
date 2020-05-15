@@ -2,9 +2,15 @@ import json
 import re
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
+import pickle
+import sys
 
 
-with open('movie_reviews/joker-reviews.json', ) as f:
+movie_name = str(sys.argv[1])
+movie_path = 'movie_reviews/' + movie_name + '.json'
+details_dict = dict()
+
+with open(movie_path, ) as f:
 	reviews = json.load(f)
 
 all_reviews = list()
@@ -16,21 +22,21 @@ for review in reviews:									#reviews is a list of dictionaries
 			if(val != ' '):								#Checking if content is not null
 				all_reviews.append(val.split())
 
-#Calculating ratings based on the scores given by the user at the site
-with open('movie_reviews/joker-ratings.json', ) as f:
-	ratings = json.load(f)
+# #Calculating ratings based on the scores given by the user at the site
+# with open(movie_path, ) as f:
+# 	ratings = json.load(f)
 
-all_ratings = list()
+# all_ratings = list()
 
-for rating in ratings:
-	for value in rating.values():
-		value = int(value)
-		all_ratings.append(value)
+# for rating in ratings:
+# 	for value in rating.values():
+# 		value = int(value)
+# 		all_ratings.append(value)
 
-total_sum = 0
-for rating in all_ratings:
-	total_sum += rating
-#----------------------------------------------------------------------
+# total_sum = 0
+# for rating in all_ratings:
+# 	total_sum += rating
+# #----------------------------------------------------------------------
 
 english_stop_words = stopwords.words('english')
 english_stop_words.remove("not")
@@ -122,13 +128,30 @@ formula1 = (positive_reviews + 0.5 * neutral_reviews) / (positive_reviews + nega
 formula2 = (positive_reviews + 0.5 * neutral_reviews) / (positive_reviews + negative_reviews + 0.5 * neutral_reviews)
 
 # print(stemmed_reviews)
-print("Most Positive Review: ", cleaned_reviews[positive_index])
-print("---------------------------------------------------------")
-print("Most Negative Review: ", cleaned_reviews[negative_index])
-print("Total reviews: ", len(stemmed_reviews), "Positive Reviews: ", positive_reviews, 
-	"Negative Reviews: ", negative_reviews, "Neutral Reviews: ", neutral_reviews)
-print("Formula 1: ", formula1, "Formula 2: ", formula2)
+# print("Most Positive Review: ", cleaned_reviews[positive_index])
+# print("---------------------------------------------------------")
+# print("Most Negative Review: ", cleaned_reviews[negative_index])
+# print("Total reviews: ", len(stemmed_reviews), "Positive Reviews: ", positive_reviews, 
+# 	"Negative Reviews: ", negative_reviews, "Neutral Reviews: ", neutral_reviews)
+# print("Formula 1: ", formula1, "Formula 2: ", formula2)
 # print("Rating by user score: ", total_sum / len(ratings))
 # for review in stemmed_reviews:
 # 	if(review[-1] == 2):
 # 		print(review)
+
+details_dict['rating'] = formula2 * 10
+
+most_positive_str = str()
+most_negative_str = str()
+
+for pos_str in cleaned_reviews[positive_index]:
+	most_positive_str += pos_str + ' '
+
+for neg_str in cleaned_reviews[negative_index]:
+	most_negative_str += neg_str + ' '
+
+details_dict['most_positive'] = most_positive_str
+details_dict['most_negative'] = most_negative_str
+
+with open('details.pickle', 'ab+') as f:
+    pickle.dump(details_dict, f)
