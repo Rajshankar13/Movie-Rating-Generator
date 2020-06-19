@@ -132,6 +132,7 @@ class AppTabWidget(QWidget):
             os.chdir("movie_reviews/")          #Since the spider is in movie_reviews directory
             # print(os.getcwd())
             subprocess.call(args)               #Executing the crawl command for Spider
+            os.chdir("..")
         else:
             # Do something to display error
             print('Field/s is/are empty')
